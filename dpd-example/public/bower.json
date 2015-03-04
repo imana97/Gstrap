@@ -1,0 +1,17 @@
+{
+  "name": "gstrap",
+  "main": "index.html",
+  "version": "0.0.1",
+  "authors": [
+    "Iman Khaghani Far <iman.khaghani@gmail.com>"
+  ],
+  "description": "gstrap framework",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "momentjs": "~2.8.3",
+    "ejs_production": "https://embeddedjavascript.googlecode.com/files/ejs_production.js",
+    "jqueryui": "~1.11.2"
+  }
+}

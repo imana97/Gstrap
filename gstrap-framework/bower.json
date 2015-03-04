@@ -1,0 +1,13 @@
+{
+  "name": "gstrap",
+  "main": "index.html",
+  "version": "0.0.1",
+  "authors": [
+    "Iman Khaghani Far <iman.khaghani@gmail.com>"
+  ],
+  "description": "gstrap framework",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "~2.1.1",
+  }
+}

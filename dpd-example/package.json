@@ -1,0 +1,21 @@
+{
+  "name": "gcrtapi",
+  "version": "0.0.1",
+  "description": "Gymcentral realtime api",
+  "main": "production.js",
+  "dependencies": {
+    "apn": "^1.7.2",
+    "deployd": "^0.8.0",
+    "dpd-event": "^0.0.2",
+    "dpd-passport": "^0.1.9",
+    "node-gcm": "^0.9.15",
+    "request": "^2.53.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node production.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Iman Khaghani Far",
+  "license": "ISC"
+}
