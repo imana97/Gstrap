@@ -20,7 +20,12 @@ once you have both jquery and gstrap in the header, you can start creating you 1
 
     <body>
 	    <script>
-		    // you application creating and configuration goes here
+	    // your code goes here
+	    </script>
+    </body>
+
+```
+#!javascript
 		    new Gstrap({
 			    name: "my app", // the name of your application
 			    version: 0.0, // lets set some versioning
@@ -78,8 +83,10 @@ once you have both jquery and gstrap in the header, you can start creating you 1
 			        $g.listen();
 			    }
 			});
-	    </script>
-    </body>
+
+```
+		    
+
 
 
 # Gstrap Modules
