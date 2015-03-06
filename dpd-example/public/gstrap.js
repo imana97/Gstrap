@@ -1,9 +1,14 @@
 (function (window) {
     return Gstrap = function (app) {
 
+        // check jquery
+        if (typeof ($)==="undefined"){
+            alert("Jquery was not found!");
+            return false;
+        }
 
         var self = this;
-
+        var _routes = [];
         this.modules = {};
 
 
@@ -13,9 +18,7 @@
             $('body').append(self.container);
         });
 
-
-
-        this.page = $(document.createElement('div')).addClass('container').html('<h1>This Page does not exist</h1>');
+        this.page = $(document.createElement('div')).addClass('container');
         this.static = function (static) {
             this.container.append(static);
         };
@@ -25,16 +28,14 @@
             }
             this.container.append(this.page);
         };
-        var _routes = [];
-        var _route = function (path, callback) {
 
+        var _route = function (path, callback) {
             var hashArr = window.location.hash.slice(3).split('/');
             var pathArr = path.split('/');
             var req = {
                 path: path,
                 params: {}
             };
-
             if (hashArr.length == pathArr.length) {
                 var check = true;
                 $.each(pathArr, function (p, path) {
@@ -48,10 +49,9 @@
                     }
                 });
                 if (check) {
-                    callback(req);
+                    callback(req,self);
                 }
             }
-
         };
         this.render = function (path, data, callback) {
             var cache = {};
@@ -105,63 +105,53 @@
                 });
             }
         };
+
         this.replaceView = function (page, container) {
             var container = container || this.page;
             container.empty();
             container.append(page);
         };
-        this.Queue = function (baseUrl) {
-            var self = this;
-            self.path = baseUrl || "#";
-            self.queue = [];
-            self.lastData = null;
-            self.next = function (func) {
-                self.queue.push(func);
-                return self;
-            };
-            self.callback = function () {
-                self.queue.shift();
-                if (self.queue.length > 0) {
-                    _runArray(self.queue[0]);
-                }
-            };
-            var _getParamNames = function (func) {
-                var funStr = func.toString();
-                var arr = funStr.slice(funStr.indexOf('(') + 1, funStr.indexOf(')')).match(/([^s,]+)/g);
-                return (arr == null);
-            };
-            var _runArray = function (func) {
-                _getParamNames(func) ? func() : func(self.callback);
-            };
-            self.run = function () {
-                if (self.queue.length > 0) {
-                    _runArray(self.queue[0]);
-                }
-            };
+
+
+        var _loadModulesRoutes=function(){
+            console.log("load is running");
+            console.log(self.modules);
+          for (var m in self.modules){
+              console.log(m);
+              if (typeof(self.modules[m].routes)!=="undefined"){
+                  var routes=self.modules[m].routes;
+                  for (var r in routes){
+                      self.route(routes[r].route,routes[r].callback);
+                  }
+              }
+          }
         };
 
 
-        // init the application
-        // start a queue for loading dependencies nad authentications
 
 
-        var queue = new this.Queue();
+        if (!app.beforeLoad){
+            app.beforeLoad=function($s,next){
+                next();
+            }
+        }
+
 
         var _loadApp=function(){
+            console.log(_routes);
           app.beforeLoad(self,function(){
               //before load is loaded
+              _loadModulesRoutes();
               app.load(self);
           });
         };
 
-        //add dependecies here
+
         var _depLoader=function(modules){
             if (modules.length==0){
                 console.log("all modules were loaded");
                 _loadApp();
-
             } else {
-
                 $.ajax({
                     url: modules[0].path,
                     dataType: "text",

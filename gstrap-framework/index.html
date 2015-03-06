@@ -2,10 +2,47 @@
 <head>
     <title>Gym Central</title>
     <meta charset="UTF-8">
-    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="gstrap.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="gstrap.min.js"></script>
 </head>
 <body style="margin-top:64px;">
+
+<script type="text/javascript">
+
+    // create and modify the application here
+
+    /**
+     * Create a gstrap application
+     */
+    new Gstrap({
+        /**
+         * Configure the application
+         */
+        name:"you application name",
+        version:0.0, // the version of your app
+        description:"some description", // optional
+        /**
+         * list the modules here
+         */
+        modules:[
+            {
+                name:"moduleName", // the name is a variable name, so no " " and invalid characters
+                path:"path/to/the/module/myModule.js" // path to the gstrap module
+            }
+        ],
+        beforLoad:function($s,next){
+            // do things here like authentication
+
+
+            // load the ui
+            next();
+        }
+    });
+
+
+
+</script>
+
 </body>
 
 </html>
