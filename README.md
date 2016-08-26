@@ -1,4 +1,4 @@
-# gstrap
+# Gstrap
 Gstrap is not just another Javascript web framework. It's been created to be exteremly simple to use, powerful and extremely similar to our programming knowledge. Therefore you can start building your web app without learning anything new (except a bit of jQuery) and you can do everything that Javascript allows you to do. I know a lot of us hate to learn just another javascript framework, we also hate to change our codebase to adapt with AngularJS or similar new frameworks. That's why I put 8 years of my javascript development experience together and created Gstrap... Let's me explain how it works in more detail.
 
 # Before Quick Start
