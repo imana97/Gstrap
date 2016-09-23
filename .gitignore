@@ -1,6 +1,9 @@
 #webstorm settings
 .idea
 
+# mac 
+.DS_Store
+
 # Logs
 logs
 *.log
