@@ -1,6 +1,6 @@
 {
   "name": "gstrap",
-  "main": "gstrap.min.js",
+  "main": "gstrap.js",
   "homepage": "https://github.com/imana97/gstrap",
   "authors": [
     "Iman Khaghani Far <iman.khaghani@gmail.com>"
