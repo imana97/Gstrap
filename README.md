@@ -1,7 +1,13 @@
-# Gstrap
+# Demo & examples
+Try it [here](https://gstrap-parse-demo.herokuapp.com/)
+or deploy your own code using parse server (less than a minute to a fullstack webb app)
+https://github.com/imana97/gstrap-parse-example 
+
+
+# About Gstrap
 Gstrap is not just another Javascript web framework. It's been created to be exteremly simple to use, powerful and extremely similar to our programming knowledge. Therefore you can start building your web app without learning anything new (except a bit of jQuery) and you can do everything that Javascript allows you to do. I know a lot of us hate to learn just another javascript framework, we also hate to change our codebase to adapt with AngularJS or similar new frameworks. That's why I put 8 years of my javascript development experience together and created Gstrap... Let's me explain how it works in more detail.
 
-# Before Quick Start
+# Jump to Quick start
 you can jump to Quick Start and create your own app in less than 10 minutes, but before that I want to give you some background on Gstrap. 
 
 ## Signle page framework ##
@@ -26,16 +32,16 @@ You can build modules that have three simple properties (1: route, 2: view (e.g.
 
 # Quick Start
 
- 1. Setup your project by creating an index.html file, then open it with your favorite editor
- 2. In the `<head></head>` tags insert:
-	 1. embed Jquery 2.X or above: because gstrap is built on top of jQuery and you need it to run gstrap.
-	 2. embed `gstrap.js` or `gstra.min.js` right after the jQuery
+ bower install gstrap
+ 
+ (note: Bower will install jquery as gstrap dependency if you don't have it already)
 
-Your code will look like this:
+Your index.html will look like this:
 
     <head>
-	    <script src="jquery.min.js"></script>
-	    <script src="gstrap.min.js"></script>
+	    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+	    <script src="bower_components/gstrap/ejs.min.js"></script>
+	    <script src="bower_components/gstrap/gstrap.min.js"></script>
     </head>
 
 ## create the app and configure it
