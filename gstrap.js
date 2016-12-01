@@ -22,23 +22,50 @@
  SOFTWARE.
  */
 
-
-window.Gstrap = {}; // define g
-Gstrap.framework = {
-  version: 0.40,
-  description: "Mini modular single page Javascript framework built on top of jQuery and EJS.co",
-  developer: "Iman Khaghani Far",
-  contact: "iman.khaghani@gmail.com",
-  license: "MIT",
-  repository: "https://github.com/imana97/gstrap"
-};
 /**
  * Gstrap app builder builds the application
  * @param app
- * @returns {boolean}
+ * @returns {{framework: {version: number, description: string, developer: string, contact: string, license: string, repository: string}, Route: Route}}
  * @constructor
  */
-Gstrap.App = function (app) {
+Gstrap = function (app) {
+
+  if (!app) {
+    // don't create the app, return the tools
+    return {
+      framework: {
+        version: 1.00,
+        description: "Mini modular single page Javascript framework built on top of jQuery and EJS.co",
+        developer: "Iman Khaghani Far",
+        contact: "iman.khaghani@gmail.com",
+        license: "MIT",
+        repository: "https://github.com/imana97/gstrap"
+      },
+      Route: function (prefix) {
+        var _prefix;
+
+        var _pathfix = function (path) {
+          return (path.length != 0) ? path.search(/\/$/) == -1 ? path + '/' : path : path;
+        };
+
+        (prefix) ? _prefix = _pathfix(prefix) : _prefix = "";
+
+        var _routes = [];
+        this.on = function (route, callback) {
+          _routes.push({
+            route: _prefix + _pathfix(route),
+            callback: callback
+          });
+          return this;
+        };
+
+        this.listen = function () {
+          return {routes: _routes};
+        };
+      }
+    }; // end of return
+  }
+
   var self = this; // reference to main this
 
   // check if jquery exist.
@@ -46,12 +73,8 @@ Gstrap.App = function (app) {
     throw new Error("Please include jQuery 2 or above in your index.html file.");
   }
 
-  if (typeof(ejs) === "undefined") {
-    throw new Error("Please include EJS library from 'http://ejs.co/' to your index.html file.");
-  }
-
-  if (typeof (app.compile)=="undefined"){
-    app.compile=false;
+  if (typeof (app.compile) == "undefined") {
+    app.compile = false;
   }
 
   /*
@@ -60,9 +83,7 @@ Gstrap.App = function (app) {
 
    */
 
-
   var _routes = []; // list of all routes and callbacks
-
 
   /*
 
@@ -83,7 +104,7 @@ Gstrap.App = function (app) {
    * @param template pass the template string
    * @private
    */
-  var _TemplateUpdate = function (template) {
+  var _TemplateUpdateEJS = function (template) {
     var _template = template;
     var _templateDOM = $('<div>').html(_template);
     var _getSubTemplate = function (id) {
@@ -110,8 +131,47 @@ Gstrap.App = function (app) {
       return this;
     };
 
-    this.prepend=function (parentId, data) {
+    this.prepend = function (parentId, data) {
       $('#' + parentId).prepend(ejs.render(_getSubTemplate(parentId), data));
+      return this;
+    };
+
+    this.remove = function (parentId, childId) {
+      $('#' + parentId).find('#' + childId).remove();
+      return this;
+    };
+
+  };
+
+  var _TemplateUpdateMustache = function (template) {
+    var _template = template;
+    var _templateDOM = $('<div>').html(_template);
+    var _getSubTemplate = function (id) {
+      return _templateDOM.find('#' + id).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    };
+
+
+    this.getTemplateString = function () {
+      return _template;
+    };
+
+    this.getSubTemplateString = function (parentId) {
+      return _getSubTemplate(parentId);
+    };
+
+    this.update = function (parentId, data) {
+      $('#' + parentId).html(Mustache.render(_getSubTemplate(parentId), data));
+      return this;
+    };
+
+    this.append = function (parentId, data) {
+
+      $('#' + parentId).append(Mustache.render(_getSubTemplate(parentId), data));
+      return this;
+    };
+
+    this.prepend = function (parentId, data) {
+      $('#' + parentId).prepend(Mustache.render(_getSubTemplate(parentId), data));
       return this;
     };
 
@@ -381,7 +441,7 @@ Gstrap.App = function (app) {
     var callback = callback || function (view) {
       };
     try {
-      var renderer=path.split('.')[1];
+      var renderer = path.split('.')[1];
 
       $.ajax({
         url: path,
@@ -392,19 +452,19 @@ Gstrap.App = function (app) {
            * it should be available inside of the controller
            */
           var template = string;
-          if (renderer=='ejs'){
+          if (renderer == 'ejs') {
             self.page.html(ejs.render(string, data));
-            callback(new _TemplateUpdate(template));
-          } else if (renderer=='mustache'){
+            callback(new _TemplateUpdateEJS(template));
+          } else if (renderer == 'mustache') {
             self.page.html(Mustache.render(string, data));
-            callback(new _TemplateUpdate(template));
-          } else{
+            callback(new _TemplateUpdateMustache(template));
+          } else {
             throw new Error("Template is not recognised. Make sure it has the 'ejs' or 'mustache' extension");
           }
         }
       });
 
-    } catch (e){
+    } catch (e) {
       throw new Error("Template must have either 'mustache' or 'ejs' extension.");
     }
 
@@ -482,19 +542,21 @@ Gstrap.App = function (app) {
     if (modules.length == 0) {
       _loadApp();
     } else {
+      $('body').append('<span id="gstrap-module-loading" style="margin-left: 10px;" >Loading...</span>');
       $.ajax({
         url: modules[0].path,
         dataType: "text",
         success: function (data) {
-          try{
-            if (modules[0].type=="module") {
+          try {
+            if (modules[0].type == "module") {
               self.modules[modules[0].name] = eval(data);
             }
-          } catch (e){
-            throw new Error("Module "+modules[0].name+": "+e.message);
+          } catch (e) {
+            throw new Error("Module " + modules[0].name + ": " + e.message);
           } finally {
             // goto next module
             modules.shift();
+            $('#gstrap-module-loading').remove();
             _depLoader(modules);
           }
         }
@@ -510,34 +572,5 @@ Gstrap.App = function (app) {
   } else {
     throw new Error("Modules are not defined");
   }
-};
+}; // end of gstrap
 
-/**
- * Class for creating new modules with registering route listeners
- * @param prefx prefix for the routes registered in this module
- * @constructor
- */
-Gstrap.Route = function (prefix) {
-  var _prefix;
-
-  var _pathfix = function (path) {
-    return (path.length != 0) ? path.search(/\/$/) == -1 ? path + '/' : path : path;
-  };
-
-  (prefix) ? _prefix = _pathfix(prefix) : _prefix = "";
-
-  //console.log(_prefix);
-
-  var _routes = [];
-  this.on = function (route, callback) {
-    _routes.push({
-      route: _prefix + _pathfix(route),
-      callback: callback
-    });
-    return this;
-  };
-
-  this.listen = function () {
-    return {routes: _routes};
-  };
-};
